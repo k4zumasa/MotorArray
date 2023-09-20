@@ -6,7 +6,8 @@ using System.IO;
 public class csvHandler : MonoBehaviour
 {
     private TextAsset csvFile; // CSVファイル
-    public List<string[]> csvData = new List<string[]>(); // CSVファイルの中身を入れるリスト
+    public List<List<string>> csvData = new List<List<string>>(); // CSVファイルの中身を入れるリスト
+
 
     // Start is called before the first frame update
     void Start()
@@ -17,13 +18,16 @@ public class csvHandler : MonoBehaviour
         while (reader.Peek() != -1)
         {
             string line = reader.ReadLine(); // 1行ずつ読み込む
-            csvData.Add(line.Split(',')); // csvDataリストに追加する
+            List<string> lineList = new List<string>(line.Split(','));
+            csvData.Add(lineList); // csvDataリストに追加する
         }
+
+        addColumn(csvData);
 
         for (int i = 0; i < csvData.Count; i++) // csvDataリストの条件を満たす値の数（全て）
         {
             // データの表示
-            //Debug.Log(csvData[i][0] + " " + csvData[i][1] + " " + csvData[i][2]);
+            Debug.Log(csvData[i][0] + " " + csvData[i][1] + " " + csvData[i][2] + " " + csvData[i][3] + " " + csvData[i][4]);
 
         }
     }
@@ -45,6 +49,15 @@ public class csvHandler : MonoBehaviour
             trialList[i][2] = trialList[randomIndex2][2];
             trialList[randomIndex1][1] = temp1;
             trialList[randomIndex1][2] = temp2;// 入れ替え元に預けておいた要素を与える
+        }
+    }
+
+    void addColumn(List<List<string>> trialList)
+    {
+        for (int i = 0; i < trialList.Count; i++)
+        {
+            trialList[i].Add("");
+            trialList[i].Add("");
         }
     }
 }

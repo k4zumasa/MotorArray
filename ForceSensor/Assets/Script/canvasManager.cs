@@ -2,22 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class canvasManager : MonoBehaviour
 {
+    string subjectID = "test";
     int currentCanvas = 1;
-    int currentTrials = 1;
+    int currentTrials = 95;
     Canvas canvas1;
     Canvas canvas2;
     Canvas canvas3;
     InputField a1;
     InputField a2;
+    GameObject CSVHandlerObject;
     csvHandler csvHandler;
+    StreamWriter sw;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        CSVHandlerObject = GameObject.Find("CSVHandler");
+        csvHandler = CSVHandlerObject.GetComponent<csvHandler>();
+
+        sw = new StreamWriter(@"Assets\" + subjectID + "Result.csv") { AutoFlush = true };
+
         canvas1 = GameObject.Find("Canvas1").GetComponent<Canvas>();
         canvas2 = GameObject.Find("Canvas2").GetComponent<Canvas>();
         canvas3 = GameObject.Find("Canvas3").GetComponent<Canvas>();
@@ -35,7 +44,7 @@ public class canvasManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
-        {
+        {   
             if (currentCanvas == 1)
             {
                 canvas1.enabled = false;
@@ -43,12 +52,37 @@ public class canvasManager : MonoBehaviour
                 currentCanvas += 1;
             }
 
-            else if (currentCanvas == 2)
+            else if (currentCanvas == 2 &&
+                     a1.text != "" &&
+                     a2.text != "")
             {
+                csvHandler.csvData[currentTrials][3] = a1.text;
+                csvHandler.csvData[currentTrials][4] = a2.text;
+
+                Debug.Log(csvHandler.csvData[currentTrials][0]
+                    + " " + csvHandler.csvData[currentTrials][1]
+                    + " " + csvHandler.csvData[currentTrials][2]
+                    + " " + csvHandler.csvData[currentTrials][3]
+                    + " " + csvHandler.csvData[currentTrials][4]);
+
+                a1.text = "";
+                a2.text = "";
+
+                sw.WriteLine(string.Join(",", csvHandler.csvData[currentTrials]));            
+
                 canvas2.enabled = false;
                 canvas1.enabled = true;
                 currentCanvas = 1;
                 currentTrials += 1;
+            }
+
+            if(currentTrials >= 100)
+            {
+                canvas1.enabled = false;
+                canvas2.enabled = false;
+                canvas3.enabled = true;
+
+                sw.Close();
             }
         }
 
@@ -90,19 +124,6 @@ public class canvasManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Keypad5))
             {
                 a2.text = "5";
-            }
-
-            if (a1.text != "" &&
-                a2.text != "" &&
-                Input.GetKeyDown(KeyCode.C))
-            {
-                csvHandler.csvData[currentTrials][3] = a1.text;
-                csvHandler.csvData[currentTrials][4] = a2.text;
-
-                Debug.Log(csvHandler.csvData);
-
-                a1.text = "";
-                a2.text = "";
             }
         }
     }
