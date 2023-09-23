@@ -13,15 +13,14 @@ public class pinArrayManager : MonoBehaviour
     string portName = "COM3";
     int baudRate = 115200;
 
-    private SerialPort serial;
+    public SerialPort serialPinArray;
     private string message;
 
     // Start is called before the first frame update
     void Start()
     {
-        serial = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
-        serial.Open();
-        serial.Write("1");
+        serialPinArray = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
+        serialPinArray.Open();
     }
 
     // Update is called once per frame

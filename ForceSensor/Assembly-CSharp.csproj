@@ -58,8 +58,10 @@
   <ItemGroup>
     <Compile Include="Assets\Script\canvasManager.cs" />
     <Compile Include="Assets\Script\serialManager.cs" />
-    <Compile Include="Assets\Script\csvHandler.cs" />
     <Compile Include="Assets\Script\pinArrayManager.cs" />
+    <Compile Include="Assets\Script\csvHandler.cs" />
+    <Compile Include="Assets\Script\ex2\ex2canvasManager.cs" />
+    <Compile Include="Assets\Script\ex2\ex2csvHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

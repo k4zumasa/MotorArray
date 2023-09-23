@@ -16,7 +16,6 @@ void feedTheDog(){//マルチスレッド用の設定
   TIMERG1.wdt_wprotect=0;
 }
 
-
 void Task0(void* param);//マルチタスク用スレッド
 
 //Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
@@ -30,11 +29,6 @@ Adafruit_PWMServoDriver pwms[] ={ Adafruit_PWMServoDriver(0x42),
 //int b_num[]={1,1,1,1,0,0,0,0,0,1,0,0,0,1,1,1};//board num
 //int p_num[]={5,4,3,6,6,7,5,2,1,0,4,3,0,7,1,2};//port num
 
-//int coms[]=  {4,5,6,7};
-//int coms2[]=  {8,9,10,11};
-//int coms3[]=  {0,1,2,3};
-// void ResetPins(int num);
-// void ActuatePin(int b,int p);
 void SetPWMs(){
   Wire.begin(26,32);//26:SDA,32:SCL
   Wire.setClock(150000);
@@ -49,16 +43,14 @@ void SetPWMs(){
   }
 }
 int flag=-1;//モード変更用のフラグ
-// int t_act[]={30,25,20,15,10};
-// int t_rest[]={30,25,20,15,10};
 int t_act[]={400000,100000,50000,20000,10000};//マイクロ秒
 int t_rest[]={400000,100000,50000,20000,10000};
 int sp_mo[]={1024,2048,3072,4095};
-int flagToRow[] = {2,3,4,5};
-int flagToColumn[] = {0,0,0,0,0,1,2,3};
+int flagToRow[] = {0,0,0,0,0,3,2,1,0};
+int flagToColumn[] = {0,0,1,2,3};
 int mode[]={1,2};//1:モータが1方向に回転するモード、2:モータが交互に両方向に回転するモード
 int tmpp=1024;
-String currentMode = "a";
+String currentMode = "ex1";
 
 // unsigned long startTime = micros();
 // unsigned long deltaTime = micros() - startTime;
@@ -75,31 +67,33 @@ void loop() {
     ResetPins(0);
     flag=-1;
   } 
-  else if(flag>=0 && flag<=3){
-    ActuateRow(flagToRow[flag]);
-    ets_delay_us(800000);
-    ResetPins(0);
-    flag=-1;
+  if(currentMode == "ex1"){
+    if(flag>=1 && flag<=4){
+      ActuateColumn(flagToColumn[flag]);
+      ets_delay_us(800000);
+      ResetPins(0);
+      flag=-1;
+    }
+    else if(flag>=5 && flag<=8){
+      ActuateRow(flagToRow[flag]);
+      ets_delay_us(800000);
+      ResetPins(0);
+      flag=-1;
+    }
   }
-  else if(flag>=4 && flag<=7){
-    ActuateColumn(flagToColumn[flag]);
-    ets_delay_us(800000);
-    ResetPins(0);
-    flag=-1;
+
+  else if(currentMode == "ex2"){
+    ActuateWave(flag);
   }
+  
 }
 
 //b: PWM driver ID
 //p: motor ID
-void ActuatePin(int b,int p){
+void ActuatePin(int b,int p){//b:column, p:row
   // int tmpp=1024;//最大4096
   pwms[b].setPWM(2*p,0,tmpp);//指定モーター端子Aに電圧印加
   pwms[b].setPWM(2*p+1,0,0);//指定モーター端子Bは0V
-}
-
-void ActuatePinReverse(int b, int p){
-  pwms[b].setPWM(2 * p, 0, 0);        // 指定モーター端子Aは0V
-  pwms[b].setPWM(2 * p + 1, 0, tmpp); // 指定モーター端子Bに電圧印加
 }
 
 void ActuateRow(int row){
@@ -110,10 +104,105 @@ void ActuateRow(int row){
 }
 
 void ActuateColumn(int column){
+  ActuatePin(column,0);
+  ActuatePin(column,1);
   ActuatePin(column,2);
   ActuatePin(column,3);
-  ActuatePin(column,4);
-  ActuatePin(column,5);
+}
+
+void ActuateWave(int direction){
+  if(direction == 1){
+    ActuateRow(0);
+    ets_delay_us(100000);
+    ResetRow(0);
+    ActuateRow(1);
+    ets_delay_us(100000);
+    ResetRow(1);
+    ActuateRow(2);
+    ets_delay_us(100000);
+    ResetRow(2);
+    ActuateRow(3);
+    ets_delay_us(100000);
+    ResetRow(3);
+    flag = -1;
+  }
+  else if (direction == 2){
+    ActuateRow(3);
+    ets_delay_us(100000);
+    ResetRow(3);
+    ActuateRow(2);
+    ets_delay_us(100000);
+    ResetRow(2);
+    ActuateRow(1);
+    ets_delay_us(100000);
+    ResetRow(1);
+    ActuateRow(0);
+    ets_delay_us(100000);
+    ResetRow(0);
+    flag = -1;
+  }
+  else if (direction == 3){
+    ActuateColumn(3);
+    ets_delay_us(100000);
+    ResetColumn(3);
+    ActuateColumn(2);
+    ets_delay_us(100000);
+    ResetColumn(2);
+    ActuateColumn(1);
+    ets_delay_us(100000);
+    ResetColumn(1);
+    ActuateColumn(0);
+    ets_delay_us(100000);
+    ResetColumn(0);
+    flag = -1;
+  }
+  else if (direction == 4){
+    ActuateColumn(0);
+    ets_delay_us(100000);
+    ResetColumn(0);
+    ActuateColumn(1);
+    ets_delay_us(100000);
+    ResetColumn(1);
+    ActuateColumn(2);
+    ets_delay_us(100000);
+    ResetColumn(2);
+    ActuateColumn(3);
+    ets_delay_us(100000);
+    ResetColumn(3);
+    flag = -1;
+  }
+}
+
+void ResetPin(int b, int p){
+  pwms[b].setPWM(2*p,0,0);
+  pwms[b].setPWM(2*p+1,0,0);
+}
+
+void ResetPins(int num){
+  for(int i=0;i<sizeof(pwms) / sizeof(Adafruit_PWMServoDriver);i++){
+    for(int j=0;j<8;j++){
+      pwms[i].setPWM(2*j,0,0);
+      pwms[i].setPWM(2*j+1,0,0);
+    }
+  }
+}
+
+void ResetRow(int num){
+  for(int i=0; i<=3; i++){
+    ResetPin(0,num);
+    ResetPin(1,num);
+    ResetPin(2,num);
+    ResetPin(3,num);
+  }
+}
+
+void ResetColumn(int num){
+  for(int i=5; i<=8; i++){
+    ResetPin(num,0);
+    ResetPin(num,1);
+    ResetPin(num,2);
+    ResetPin(num,3);
+  }
 }
 
 void ActuateRowReverse(int row){
@@ -132,13 +221,9 @@ void ActuatePinAlternative(int b,int p,int pulsesInSingleDrive){//pulsesInSingle
   }
 }
 
-void ResetPins(int num){
-  for(int i=0;i<sizeof(pwms) / sizeof(Adafruit_PWMServoDriver);i++){
-    for(int j=0;j<8;j++){
-      pwms[i].setPWM(2*j,0,0);
-      pwms[i].setPWM(2*j+1,0,0);
-    }
-  }
+void ActuatePinReverse(int b, int p){
+  pwms[b].setPWM(2 * p, 0, 0);        // 指定モーター端子Aは0V
+  pwms[b].setPWM(2 * p + 1, 0, tmpp); // 指定モーター端子Bに電圧印加
 }
 
 void Task0(void* param){//マルチタスク用スレット
@@ -155,12 +240,12 @@ void Task0(void* param){//マルチタスク用スレット
       //   //Serial.println(tmpp);
       // }
       else if(val==49){//"a"
-        currentMode = "a";
-        Serial.println("currentMode : one way");
+        currentMode = "ex1";
+        Serial.println("experiment1 started.");
       }
       else if(val==50){//"b"
-        currentMode = "b";
-        Serial.println("currentMode : altenate");
+        currentMode = "ex2";
+        Serial.println("experiment2 started.");
       }
     }
     feedTheDog();
