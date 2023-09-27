@@ -49,7 +49,7 @@ int sp_mo[]={1024,2048,3072,4095};
 int flagToRow[] = {0,0,0,0,0,3,2,1,0};
 int flagToColumn[] = {0,0,1,2,3};
 int mode[]={1,2};//1:モータが1方向に回転するモード、2:モータが交互に両方向に回転するモード
-int tmpp=1024;
+int tmpp=2048;
 String currentMode = "ex1";
 
 // unsigned long startTime = micros();
