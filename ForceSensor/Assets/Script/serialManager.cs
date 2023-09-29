@@ -53,7 +53,7 @@ public class serialManager : MonoBehaviour
             GetInitVal();
         }
 
-        if(2.5<=(float)(data[2] * -1) && (float)(data[2] * -1) <= 3.5)
+        if(1.5<=(float)(data[2] * -1) && (float)(data[2] * -1) <= 2.5)
         {
             forceIndicator.image.color = Color.green;
         }
@@ -182,6 +182,6 @@ public class serialManager : MonoBehaviour
 
     private void refreshBarVal(float value)
     {
-        forceBar.value = (float)(data[2] / 6 * -1);
+        forceBar.value = (float)(data[2] / 4 * -1);
     }
 }

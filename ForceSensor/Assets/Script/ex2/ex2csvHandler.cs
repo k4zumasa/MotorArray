@@ -28,7 +28,7 @@ public class ex2csvHandler : MonoBehaviour
         for (int i = 0; i < csvData.Count; i++) // csvDataリストの条件を満たす値の数（全て）
         {
             // データの表示
-            Debug.Log(csvData[i][0] + " " + csvData[i][0]);
+            //Debug.Log(csvData[i][0] + " " + csvData[i][0]);
 
         }
     }
@@ -42,6 +42,7 @@ public class ex2csvHandler : MonoBehaviour
     {
         for (int i = 0; i < trialList.Count; i++)
         {
+            trialList[i].Add("");
             trialList[i].Add("");
         }
     }

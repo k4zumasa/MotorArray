@@ -58,7 +58,7 @@ public class canvasManager : MonoBehaviour
     void Update()
     {
         //ƒy[ƒW‘—‚è‚Ìˆ—
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {   
             if (currentCanvas == 0 &&
                 IDInputField.text != "")
@@ -72,7 +72,7 @@ public class canvasManager : MonoBehaviour
 
             else if (currentCanvas == 1)
             {
-                Debug.Log(int.Parse(csvHandler.csvData[currentTrials][1]));
+                //Debug.Log(int.Parse(csvHandler.csvData[currentTrials][1]));
                 if (0 <= int.Parse(csvHandler.csvData[currentTrials][1]) &&
                          int.Parse(csvHandler.csvData[currentTrials][1]) <= 3)
                 {
@@ -96,12 +96,13 @@ public class canvasManager : MonoBehaviour
             {
                 csvHandler.csvData[currentTrials][3] = a1.text;
                 csvHandler.csvData[currentTrials][4] = a2.text;
+                csvHandler.csvData[currentTrials][5] = Time.time.ToString();
 
-                Debug.Log(csvHandler.csvData[currentTrials][0]
-                    + " " + csvHandler.csvData[currentTrials][1]
-                    + " " + csvHandler.csvData[currentTrials][2]
-                    + " " + csvHandler.csvData[currentTrials][3]
-                    + " " + csvHandler.csvData[currentTrials][4]);
+                //Debug.Log(csvHandler.csvData[currentTrials][0]
+                //    + " " + csvHandler.csvData[currentTrials][1]
+                //    + " " + csvHandler.csvData[currentTrials][2]
+                //    + " " + csvHandler.csvData[currentTrials][3]
+                //    + " " + csvHandler.csvData[currentTrials][4]);
 
                 a1.text = "";
                 a2.text = "";
@@ -177,9 +178,9 @@ public class canvasManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            Debug.Log(csvHandler.csvData[currentTrials][1] + ", " + csvHandler.csvData[currentTrials][2]);
+            //Debug.Log(csvHandler.csvData[currentTrials][1] + ", " + csvHandler.csvData[currentTrials][2]);
             drivePin(csvHandler.csvData[currentTrials][1], 0);
             drivePin(csvHandler.csvData[currentTrials][2], 1600);
 

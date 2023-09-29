@@ -20,8 +20,6 @@ public class ex2canvasManager : MonoBehaviour
     GameObject pinArrayManagerObject;
     pinArrayManager pinArrayManager;
     StreamWriter sw;
-    
-
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +49,7 @@ public class ex2canvasManager : MonoBehaviour
     void Update()
     {
         //ƒy[ƒW‘—‚è‚Ìˆ—
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             if (currentCanvas == 0 &&
                 IDInputField.text != "")
@@ -64,7 +62,7 @@ public class ex2canvasManager : MonoBehaviour
             }
             else if (currentCanvas == 1)
             {
-                Debug.Log(int.Parse(csvHandler.csvData[currentTrials][1]));
+                //Debug.Log(int.Parse(csvHandler.csvData[currentTrials][1]));
                 if (0 <= int.Parse(csvHandler.csvData[currentTrials][1]) &&
                          int.Parse(csvHandler.csvData[currentTrials][1]) <= 3)
                 {
@@ -84,10 +82,11 @@ public class ex2canvasManager : MonoBehaviour
                      a1.text != "")
             {
                 csvHandler.csvData[currentTrials][2] = a1.text;
+                csvHandler.csvData[currentTrials][3] = Time.time.ToString();
 
-                Debug.Log(csvHandler.csvData[currentTrials][0]
-                    + " " + csvHandler.csvData[currentTrials][1]
-                    + " " + csvHandler.csvData[currentTrials][2]);
+                //Debug.Log(csvHandler.csvData[currentTrials][0]
+                //    + " " + csvHandler.csvData[currentTrials][1]
+                //    + " " + csvHandler.csvData[currentTrials][2]);
 
                 a1.text = "";
 
@@ -130,9 +129,9 @@ public class ex2canvasManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            Debug.Log(csvHandler.csvData[currentTrials][1]);
+            //Debug.Log(csvHandler.csvData[currentTrials][1]);
             drivePin(csvHandler.csvData[currentTrials][1], 0);
 
         }
